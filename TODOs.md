@@ -9,5 +9,6 @@
 - [ ] Improve UI in general
 - [ ] Add notifications on data update
 - [ ] Create movie detail modal (?)
-- [ ] 
+- [ ] Create a suggestion dropdown (?)
+- [ ] Add language dropdown / ES/EN toggle button (?)
 - [ ] 

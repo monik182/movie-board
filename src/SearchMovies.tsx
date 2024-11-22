@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { ErrorMessage, SearchBar } from './App.styles'
 import { IndexedDbMovieStorage } from './util'
 import { EnhancedMovie, MovieApiResponse } from './types'
-import { notification, Button } from 'antd'
+import { notification, Button, Input } from 'antd'
 import { MovieList } from './components'
 
 const API_URL = 'https://api.themoviedb.org'
@@ -107,15 +107,21 @@ export const SearchMovies: React.FC = () => {
     }
   }
 
+  // determine this type
+  const handleOnChange = (e: any) => {
+    setSearchTerm(e.target.value)
+    setPage(1)
+  }
+
 
   return (
     <div>
       <h1>Movie Board</h1>
       <SearchBar>
-        <input
+        <Input
           type="text"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={handleOnChange}
           placeholder="Search for a movie by title..."
           onKeyDown={handleOnEnter}
         />
