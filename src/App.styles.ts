@@ -34,7 +34,7 @@ export const SearchBar = styled.div`
   }
 `;
 
-export const MovieList = styled.div`
+export const MovieListContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 20px;

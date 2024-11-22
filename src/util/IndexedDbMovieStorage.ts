@@ -1,5 +1,5 @@
 import { IDBPDatabase, openDB } from 'idb'
-import { EnhancedMovie, MovieStorage } from './types'
+import { EnhancedMovie, MovieStorage } from '../types'
 
 export class IndexedDbMovieStorage implements MovieStorage {
   private dbPromise: Promise<IDBPDatabase>
