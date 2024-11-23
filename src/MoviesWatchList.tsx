@@ -3,7 +3,7 @@ import { MovieList } from './components';
 import { IndexedDbMovieStorage } from './util';
 import { EnhancedMovie } from './types';
 
-export function MovieBoard() {
+export function MoviesWatchList() {
   const [movies, setMovies] = useState<EnhancedMovie[]>([])
   const movieStorage = new IndexedDbMovieStorage()
   async function getMovies() {
@@ -58,7 +58,7 @@ export function MovieBoard() {
 
   return (
     <div>
-      <h1>Movie Board</h1>
+      <h1>Movies Watch List</h1>
       <MovieList movies={movies} onDelete={handleDeleteMovie} onChange={handleUpdateMovie} pagination={{ pageSize: 100 }} />
     </div>
 
