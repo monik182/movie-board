@@ -3,6 +3,7 @@ import { EnhancedMovie } from '../types'
 import { Alert, List, Space } from 'antd'
 import { LikeOutlined, CheckCircleOutlined, StarOutlined, DeleteOutlined, BorderOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
+import dayjs from 'dayjs'
 
 interface MovieListProps {
   title?: string
@@ -90,8 +91,7 @@ function generateDescription(item: EnhancedMovie) {
         src={`${process.env.REACT_APP_IMG_URL}w200/${item.poster_path}`}
       />}
 
-      {/* <p>{item.overview.slice(0, 100)}...</p> */}
-      <p>Release date: {item.release_date}</p>
+      {item.release_date && <p>Release date: {dayjs(item.release_date).format('MMM YYYY')}</p>}
       {item.saved && <Alert message="Movie already in your watch list" type="success" showIcon />}
     </div>
   )

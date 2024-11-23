@@ -1,6 +1,7 @@
 # TODOs
 
 - [ ] Manage sessions
+- [ ] Share
 - [ ] Deploy app
 - [ ] Migrate my data to cloud db
 - [ ] Create genera filter
