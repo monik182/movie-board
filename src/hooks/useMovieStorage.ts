@@ -17,8 +17,11 @@ export function useMovieStorage() {
     try {
       const movies = await movieStorage.getMovies()
       const orderedMovies = movies.sort((a, b) => {
-        if (a.watched === b.watched) {
+        if (a.release_date === b.release_date) {
           return a.title.localeCompare(b.title)
+        }
+        if (a.watched === b.watched) {
+          return b.release_date.localeCompare(a.release_date)
         }
         return a.watched ? 1 : -1
       })

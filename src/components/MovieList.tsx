@@ -3,6 +3,7 @@ import { EnhancedMovie } from '../types'
 import { Image, Badge, Card, List } from 'antd'
 import styled from 'styled-components'
 import { ActionButtons } from './ActionButtons'
+import dayjs from 'dayjs'
 
 interface MovieListProps {
   title?: string
@@ -58,6 +59,7 @@ export function MovieList({ title, movies, pagination, onAdd, onDelete, onChange
                 <Cover>
                   {getCover(item)}
                 </Cover>
+                {dayjs(item.release_date).format('MMM YYYY')}
                 <ActionButtons item={item} onAdd={onAdd} onChange={onChange} onDelete={onDelete} />
               </MovieContainer>
             </Wrapper>
