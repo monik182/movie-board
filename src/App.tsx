@@ -23,7 +23,7 @@ const AppContent: React.FC = () => {
     <Router>
       <AppContainer>
         <nav>
-          <Link to="/">Movie Board</Link> | <Link to="/search">Search Movies</Link>
+          <Link to="/">Movie Watch List</Link> | <Link to="/search">Find Movies</Link>
         </nav>
         <Routes>
           <Route path="/" element={<MoviesWatchList />} />

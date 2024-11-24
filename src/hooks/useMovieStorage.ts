@@ -40,7 +40,7 @@ export function useMovieStorage() {
     try {
       const updatedMovie = { ...movie, watched: !movie.watched }
       await movieStorage.updateMovie(updatedMovie)
-      getMovies()
+      setMovies(movies.map((m) => m.id === movie.id ? updatedMovie : m))
     } catch (err) {
       console.error('Failed to update movie', err)
     }
@@ -49,7 +49,7 @@ export function useMovieStorage() {
   const deleteMovie = async (id: EnhancedMovie['id']) => {
     try {
       await movieStorage.deleteMovie(id)
-      getMovies()
+      setMovies(movies.filter((movie) => movie.id !== id))
     } catch (err) {
       console.error('Failed to delete movie', err)
     }
