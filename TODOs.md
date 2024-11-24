@@ -2,9 +2,9 @@
 
 - [ ] Make responsive
 - [ ] Link to streaming platform
-- [ ] Create genre filter
 - [ ] Improve UI in general
-- [ ] Add notifications on data update
+- [x] Create genre filter
+- [x] Add notifications on data update
 - [x] Create sessions
 - [x] Migrate my data to cloud db
 - [x] Share

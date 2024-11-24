@@ -69,7 +69,7 @@ export function MoviesWatchList() {
         />
         <Select
           allowClear
-          placeholder="Outlined"
+          placeholder="Genre"
           style={{ width: 250 }}
           options={genres}
           onChange={setSelectedGenre}

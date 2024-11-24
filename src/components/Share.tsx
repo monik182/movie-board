@@ -31,7 +31,7 @@ export const SharePage = ({ sessionId }: SharePageProps) => {
   }
 
   return (
-    <Button type="default" icon={<ShareAltOutlined />} onClick={handleShare}>
+    <Button type="text" icon={<ShareAltOutlined />} onClick={handleShare}>
       Share this Page
     </Button>
   )
