@@ -22,22 +22,23 @@ export class FirestoreMovieStorage implements MovieStorage {
     this.moviesCollection = collection(db, `movies-${sessionId}`)
   }
 
-  async saveMovie(movie: EnhancedMovie): Promise<void> {
-    try {
-      await addDoc(this.moviesCollection, movie)
-    } catch (error) {
-      console.error('Error saving movie: ', error)
-    }
-  }
-
   async getMovies(): Promise<EnhancedMovie[]> {
     const querySnapshot = await getDocs(this.moviesCollection)
     return querySnapshot.docs.map(this.convertDocToMovie)
   }
 
+  async saveMovie(movie: EnhancedMovie): Promise<void> {
+    try {
+      const movieDoc = doc(this.moviesCollection, movie.id.toString())
+      await setDoc(movieDoc, movie)
+    } catch (error) {
+      console.error('Error saving movie: ', error)
+    }
+  }
+
   async updateMovie(movie: EnhancedMovie): Promise<void> {
     const movieDoc = doc(this.moviesCollection, movie.id.toString())
-    await setDoc(movieDoc, movie)
+    await setDoc(movieDoc, movie, { merge: true })
   }
 
   async deleteMovie(movieId: EnhancedMovie['id']): Promise<void> {
@@ -49,6 +50,28 @@ export class FirestoreMovieStorage implements MovieStorage {
     const movieDoc = doc(this.moviesCollection, movieId.toString())
     const docSnapshot = await getDoc(movieDoc)
     return docSnapshot.exists()
+  }
+
+  async deleteAll(): Promise<void> {
+    try {
+      const querySnapshot = await getDocs(this.moviesCollection)
+      const batchSize = 500
+      let batchCount = 0
+
+      for (const documentSnapshot of querySnapshot.docs) {
+        const docRef = doc(this.moviesCollection, documentSnapshot.id)
+        await deleteDoc(docRef)
+        batchCount++
+
+        if (batchCount >= batchSize) {
+          console.log(`Deleted ${batchCount} documents...`)
+          batchCount = 0
+        }
+      }
+      console.log('Collection deletion completed successfully.')
+    } catch (error) {
+      console.error('Error deleting collection: ', error)
+    }
   }
 
   private convertDocToMovie(doc: DocumentSnapshot): EnhancedMovie {
