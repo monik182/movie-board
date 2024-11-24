@@ -62,6 +62,7 @@ export function useMovieStorage() {
   const forceMovieSync = async () => {
     await movieStorage.forceMovieSyncFromFirestore()
     await movieStorage.forceMovieSync()
+    getMovies()
   }
 
   useEffect(() => {
