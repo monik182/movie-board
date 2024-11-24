@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { MovieService } from '../util'
-import { EnhancedMovie, MovieApiResponse } from '../types'
+import { EnhancedMovie, Movie, MovieApiResponse } from '../types'
 import { notification } from 'antd'
 import { useMovieStorage } from './useMovieStorage'
 
@@ -12,10 +12,9 @@ export function useMovieService() {
   const [movies, setMovies] = useState<EnhancedMovie[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [page, setPage] = useState(1)
-  const [query, setQuery] = useState('')
 
-  const fetchMovies = async () => {
+  const fetchMovies = async (query: string, page = 1) => {
+    if (!query) return
     setLoading(true)
     setError('')
     setMovies([])
@@ -44,27 +43,32 @@ export function useMovieService() {
     }
   }
 
-  const handlePageChange = (page: number) => {
-    setPage(page)
-    fetchMovies()
+  const getGenres = async () => {
+    try {
+      const genres = await movieService.fetchGenres()
+      return genres
+    } catch (err) {
+      setError('Failed to fetch genres. Please try again.')
+    }
   }
 
-  const handleOnChange = (e: any) => {
-    setPage(e.target.value)
-    setPage(1)
+  const getMovieDetails = async (id: Movie['id']) => {
+    try {
+      const movie = await movieService.fetchMovieDetail(id)
+      return movie
+    } catch (err) {
+      setError('Failed to fetch movie details. Please try again.')
+    }
   }
 
   return {
-    page,
-    query,
     movies,
     metadata,
     loading,
     error,
-    setQuery,
     setMovies,
     fetchMovies,
-    handleOnChange,
-    handlePageChange,
+    getGenres,
+    getMovieDetails,
   }
 }

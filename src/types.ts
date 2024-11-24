@@ -5,7 +5,7 @@ export interface MovieApiResponse {
   total_results: number;
 }
 
-interface Movie {
+export interface Movie {
   adult: boolean;
   backdrop_path: string;
   genre_ids: number[];
@@ -20,6 +20,16 @@ interface Movie {
   video: boolean;
   vote_average: number;
   vote_count: number;
+}
+
+export interface Genre {
+  id: number;
+  name: string;
+}
+
+export interface Option {
+  value: string | number;
+  label: string;
 }
 
 export interface EnhancedMovie extends Movie {

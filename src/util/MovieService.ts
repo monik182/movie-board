@@ -1,3 +1,5 @@
+import { Genre, Movie } from '../types'
+
 export class MovieService {
   private API_URL: string
   private BEARER_TOKEN: string
@@ -41,7 +43,7 @@ export class MovieService {
     }
   }
 
-  async fetchMovieDetail(id: string) {
+  async fetchMovieDetail(id: Movie['id']) {
     try {
       const data = await this.fetchApi(`/3/movie/${id}?language=${this.language}`)
       return data
@@ -50,10 +52,10 @@ export class MovieService {
     }
   }
 
-  async fetchGenres() {
+  async fetchGenres(): Promise<Genre[]> {
     try {
       const data = await this.fetchApi(`/3/genre/movie/list`)
-      return data
+      return data.genres
     } catch (err) {
       throw new Error('Failed to fetch genres. Please try again.')
     }
