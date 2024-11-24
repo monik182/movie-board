@@ -4,13 +4,13 @@ import { EnhancedMovie, MovieApiResponse } from '../types'
 import { notification, Button, Input } from 'antd'
 import { MovieList } from '../components'
 import { useMovieStorage } from '../hooks'
+// import { MovieService } from '../util'
 
 const API_URL = 'https://api.themoviedb.org'
 
 type NotificationType = 'success' | 'info' | 'warning' | 'error'
 
 export const SearchMovies: React.FC = () => {
-  // const [api, contextHolder] = notification.useNotification();
   const { saveMovie, movieExists } = useMovieStorage()
   const [searchTerm, setSearchTerm] = useState('')
   const [moviesMetadata, setMoviesMetadata] = useState<Omit<MovieApiResponse, 'results'>>()
@@ -18,8 +18,8 @@ export const SearchMovies: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [language, setLanguage] = useState('en-US')
-  // const [language, setLanguage] = useState('es-ES')
   const [page, setPage] = useState(1)
+  // const movieService = new MovieService(process.env.REACT_APP_API_URL as string, process.env.REACT_APP_BEARER_TOKEN as string);
 
   async function fetchMovies() {
     setLoading(true)
@@ -63,30 +63,6 @@ export const SearchMovies: React.FC = () => {
     fetchMovies()
   }
 
-  async function fetchLanguages() {
-    const response = await fetch(`${API_URL}/3/configuration/languages`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${process.env.REACT_APP_BEARER_TOKEN}`,
-        'accept': 'application/json'
-      }
-    })
-    const data = await response.json()
-    console.log(data)
-  }
-
-  async function fetchMovie(id: string) {
-    const response = await fetch(`${API_URL}/3/movie/${id}?language=${language}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${process.env.REACT_APP_BEARER_TOKEN}`,
-        'accept': 'application/json'
-      }
-    })
-    const data = await response.json()
-    console.log(data)
-  }
-
   const handleSaveMovie = async (movie: EnhancedMovie) => {
     try {
       await saveMovie(movie)
@@ -101,13 +77,6 @@ export const SearchMovies: React.FC = () => {
     }
   }
 
-  const handleOnEnter = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      fetchMovies()
-    }
-  }
-
-  // determine this type
   const handleOnChange = (e: any) => {
     setSearchTerm(e.target.value)
     setPage(1)
@@ -116,21 +85,19 @@ export const SearchMovies: React.FC = () => {
 
   return (
     <div>
-      <h1>Movie Board</h1>
-      <SearchBar>
-        <Input
-          type="text"
-          value={searchTerm}
-          onChange={handleOnChange}
-          placeholder="Search for a movie by title..."
-          onKeyDown={handleOnEnter}
-        />
-        <Button onClick={fetchMovies} disabled={loading} loading={loading}>
-          Search
-        </Button>
-      </SearchBar>
+      <h1>Find movies</h1>
+      <Input.Search
+        allowClear
+        type="text"
+        value={searchTerm}
+        onChange={handleOnChange}
+        placeholder="Search movie"
+        onPressEnter={fetchMovies}
+        loading={loading}
+        maxLength={100}
+      />
       {error && <ErrorMessage>{error}</ErrorMessage>}
-      <MovieList title="Search Results" movies={fetchedMovies} onAdd={handleSaveMovie} pagination={{ total: moviesMetadata?.total_pages, current: page, onChange: handlePageChange }} />
+      <MovieList movies={fetchedMovies} onAdd={handleSaveMovie} pagination={{ total: moviesMetadata?.total_pages, current: page, onChange: handlePageChange }} />
     </div>
   )
 }
