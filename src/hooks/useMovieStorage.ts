@@ -61,7 +61,7 @@ export function useMovieStorage() {
 
   useEffect(() => {
     getMovies()
-  }, [])
+  }, [sessionId])
 
   return {
     movies,
