@@ -27,10 +27,21 @@ export function Admin() {
     }
   }
 
+  const handleDeleteAll = async () => {
+    try {
+      await firestoreStorage.deleteAll()
+      console.log('All Firebase data deleted successfully!')
+    } catch (err) {
+      console.error('Failed to delete all Firebase data', err)
+      console.log('Failed to delete all Firebase data. Please try again.')
+    }
+  }
+
   return (
     <div>
       <h1>Admin</h1>
       <Button type="primary" onClick={uploadDataToFirebase}>Upload Data to Firebase</Button>
+      <Button type="text" onClick={handleDeleteAll}>Delete all Firebase data</Button>
     </div>
   )
 }
