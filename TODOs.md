@@ -1,9 +1,9 @@
 # TODOs
 
-- [ ] Manage sessions
-- [ ] Share
+- [x] Create sessions
+- [x] Migrate my data to cloud db
 - [ ] Deploy app
-- [ ] Migrate my data to cloud db
+- [ ] Share
 - [ ] Create genera filter
 - [ ] Make responsive
 - [ ] Improve UI to identify watched movies
