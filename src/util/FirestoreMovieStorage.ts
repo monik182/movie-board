@@ -1,6 +1,6 @@
-import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, addDoc, getDocs, setDoc, deleteDoc, doc } from 'firebase/firestore';
-import { EnhancedMovie, MovieStorage } from '../types';
+import { initializeApp } from 'firebase/app'
+import { getFirestore, collection, addDoc, getDocs, setDoc, deleteDoc, doc, getDoc, DocumentSnapshot } from 'firebase/firestore'
+import { EnhancedMovie, MovieStorage } from '../types'
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -12,37 +12,46 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 }
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const app = initializeApp(firebaseConfig)
+const db = getFirestore(app)
 
 export class FirestoreMovieStorage implements MovieStorage {
-  private moviesCollection;
+  private moviesCollection
 
   constructor(sessionId: string) {
-    this.moviesCollection = collection(db, `movies-${sessionId}`);
+    this.moviesCollection = collection(db, `movies-${sessionId}`)
   }
 
   async saveMovie(movie: EnhancedMovie): Promise<void> {
-    await addDoc(this.moviesCollection, movie);
+    try {
+      await addDoc(this.moviesCollection, movie)
+    } catch (error) {
+      console.error('Error saving movie: ', error)
+    }
   }
 
-  async getMovies(): Promise<any[]> {
-    const querySnapshot = await getDocs(this.moviesCollection);
-    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))// as EnhancedMovie[];
+  async getMovies(): Promise<EnhancedMovie[]> {
+    const querySnapshot = await getDocs(this.moviesCollection)
+    return querySnapshot.docs.map(this.convertDocToMovie)
   }
 
   async updateMovie(movie: EnhancedMovie): Promise<void> {
-    const movieDoc = doc(db, `movies-${movie.id}`, movie.id.toString());
-    await setDoc(movieDoc, movie);
+    const movieDoc = doc(this.moviesCollection, movie.id.toString())
+    await setDoc(movieDoc, movie)
   }
 
   async deleteMovie(movieId: EnhancedMovie['id']): Promise<void> {
-    const movieDoc = doc(db, `movies-${movieId}`, movieId.toString());
-    await deleteDoc(movieDoc);
+    const movieDoc = doc(this.moviesCollection, movieId.toString())
+    await deleteDoc(movieDoc)
   }
 
   async movieExists(movieId: EnhancedMovie['id']): Promise<boolean> {
-    const querySnapshot = await getDocs(this.moviesCollection);
-    return querySnapshot.docs.some(doc => doc.id === movieId.toString());
+    const movieDoc = doc(this.moviesCollection, movieId.toString())
+    const docSnapshot = await getDoc(movieDoc)
+    return docSnapshot.exists()
+  }
+
+  private convertDocToMovie(doc: DocumentSnapshot): EnhancedMovie {
+    return { id: parseInt(doc.id), ...doc.data() } as EnhancedMovie
   }
 }
