@@ -20,26 +20,32 @@ const AppContent: React.FC = () => {
   }
 
   return (
-    <Router>
+    <div>
       <AppContainer>
         <nav>
           <Link to="/">Movie Watch List</Link> | <Link to="/search">Find Movies</Link>
         </nav>
         <Routes>
           <Route path="/" element={<MoviesWatchList />} />
+          <Route path="/:id" element={<MoviesWatchList />} />
           <Route path="/search" element={<SearchMovies />} />
           <Route path="/admin" element={<Admin />} />
         </Routes>
       </AppContainer>
-    </Router>
+      <footer>
+        <p>Powered by <a href="https://www.themoviedb.org/" target="_blank" rel="noreferrer">TMDB</a></p>
+      </footer>
+    </div>
   )
 }
 
 const App: React.FC = () => {
   return (
-    <SessionIdProvider>
-      <AppContent />
-    </SessionIdProvider>
+    <Router>
+      <SessionIdProvider>
+        <AppContent />
+      </SessionIdProvider>
+    </Router>
   )
 }
 
