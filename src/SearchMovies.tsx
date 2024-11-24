@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { ErrorMessage, SearchBar } from './App.styles'
-import { IndexedDbMovieStorage } from './util'
 import { EnhancedMovie, MovieApiResponse } from './types'
 import { notification, Button, Input } from 'antd'
 import { MovieList } from './components'
+import { useMovieStorage } from './hooks'
 
 const API_URL = 'https://api.themoviedb.org'
 
@@ -11,6 +11,7 @@ type NotificationType = 'success' | 'info' | 'warning' | 'error'
 
 export const SearchMovies: React.FC = () => {
   // const [api, contextHolder] = notification.useNotification();
+  const { saveMovie, movieExists } = useMovieStorage()
   const [searchTerm, setSearchTerm] = useState('')
   const [moviesMetadata, setMoviesMetadata] = useState<Omit<MovieApiResponse, 'results'>>()
   const [fetchedMovies, setFetchedMovies] = useState<EnhancedMovie[]>([])
@@ -19,7 +20,6 @@ export const SearchMovies: React.FC = () => {
   const [language, setLanguage] = useState('en-US')
   // const [language, setLanguage] = useState('es-ES')
   const [page, setPage] = useState(1)
-  const movieStorage = new IndexedDbMovieStorage()
 
   async function fetchMovies() {
     setLoading(true)
@@ -39,7 +39,7 @@ export const SearchMovies: React.FC = () => {
         data.results.map(async (movie: any) => ({
           ...movie,
           watched: false,
-          saved: await movieStorage.movieExists(movie.id),
+          saved: await movieExists(movie.id),
         }))
       );
       const sortedMovies = movieData.sort((a, b) => parseInt(a.year) - parseInt(b.year))
@@ -89,7 +89,7 @@ export const SearchMovies: React.FC = () => {
 
   const handleSaveMovie = async (movie: EnhancedMovie) => {
     try {
-      await movieStorage.saveMovie(movie)
+      await saveMovie(movie)
       const updatedMovie = { ...movie, saved: true }
       setFetchedMovies(fetchedMovies.map((m) => m.id === movie.id ? updatedMovie : m))
       console.log('Movie saved successfully!')
