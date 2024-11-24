@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
 
 type SessionIdContextType = {
   sessionId: string | null
@@ -15,6 +15,7 @@ export const useSessionIdContext = () => {
 }
 
 export const SessionIdProvider = ({ children }: { children: JSX.Element }) => {
+  const hasInitialized = useRef(false)
   const [sessionId, setSessionId] = useState<string | null>(() => {
     if (typeof window !== 'undefined') {
       const sessionExpiry = localStorage.getItem('sessionExpiry')
@@ -29,11 +30,15 @@ export const SessionIdProvider = ({ children }: { children: JSX.Element }) => {
   })
 
   useEffect(() => {
+    if (hasInitialized.current) return
+    hasInitialized.current = true
+    
     if (!sessionId) {
       const now = new Date().getTime()
       const array = new Uint32Array(4)
       window.crypto.getRandomValues(array)
       const newSessionId = array.join('-')
+      console.log('New session ID:', newSessionId)
 
       localStorage.setItem('sessionId', newSessionId)
       localStorage.setItem('sessionExpiry', (now + 30 * 24 * 60 * 60 * 1000).toString())
