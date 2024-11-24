@@ -1,8 +1,7 @@
 import React from 'react'
 import { AppContainer } from './App.styles'
 import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom'
-import { MoviesWatchList } from './MoviesWatchList'
-import { SearchMovies } from './SearchMovies'
+import { MoviesWatchList, SearchMovies } from './pages'
 import { SessionIdProvider, useSessionIdContext } from './hooks'
 import { Admin } from './Admin'
 import { LoadingOutlined } from '@ant-design/icons';

@@ -1,5 +1,5 @@
-import { MovieList } from './components'
-import { useMovieStorage } from './hooks'
+import { MovieList } from '../components'
+import { useMovieStorage } from '../hooks'
 
 export function MoviesWatchList() {
   const { movies, updateMovie, deleteMovie } = useMovieStorage()

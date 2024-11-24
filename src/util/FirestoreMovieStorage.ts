@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import { getFirestore, collection, addDoc, getDocs, setDoc, deleteDoc, doc, getDoc, DocumentSnapshot } from 'firebase/firestore'
+import { getFirestore, collection, getDocs, setDoc, deleteDoc, doc, getDoc, DocumentSnapshot } from 'firebase/firestore'
 import { EnhancedMovie, MovieStorage } from '../types'
 
 const firebaseConfig = {

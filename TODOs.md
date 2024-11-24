@@ -3,6 +3,7 @@
 - [x] Create sessions
 - [x] Migrate my data to cloud db
 - [ ] Deploy app
+- [ ] Add Tmbd reference
 - [ ] Share
 - [ ] Create genera filter
 - [ ] Make responsive
@@ -14,5 +15,4 @@
 - [ ] Create movie detail modal (?)
 - [ ] Create a suggestion dropdown (?)
 - [ ] Add language dropdown / ES/EN toggle button (?)
-- [ ] Add Tmbd reference
 - [ ] 

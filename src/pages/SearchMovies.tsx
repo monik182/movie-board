@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import { ErrorMessage, SearchBar } from './App.styles'
-import { EnhancedMovie, MovieApiResponse } from './types'
+import { ErrorMessage, SearchBar } from '../App.styles'
+import { EnhancedMovie, MovieApiResponse } from '../types'
 import { notification, Button, Input } from 'antd'
-import { MovieList } from './components'
-import { useMovieStorage } from './hooks'
+import { MovieList } from '../components'
+import { useMovieStorage } from '../hooks'
 
 const API_URL = 'https://api.themoviedb.org'
 
