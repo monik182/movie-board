@@ -1,10 +1,17 @@
 import { useEffect, useState } from 'react'
 import { EnhancedMovie } from '../types'
-import { IndexedDbMovieStorage } from '../util'
+import { DualMovieStorage } from '../util'
+import { useSessionIdContext } from './SessionIdContext'
 
 export function useMovieStorage() {
+  const { sessionId } = useSessionIdContext()
   const [movies, setMovies] = useState<EnhancedMovie[]>([])
-  const movieStorage = new IndexedDbMovieStorage()
+
+  if (!sessionId) {
+    throw new Error('Session ID is required')
+  }
+
+  const movieStorage = new DualMovieStorage(sessionId)
 
   const getMovies = async () => {
     try {
@@ -18,6 +25,14 @@ export function useMovieStorage() {
       setMovies(orderedMovies)
     } catch (err) {
       console.error('Failed to fetch movies', err)
+    }
+  }
+
+  const saveMovie = async (movie: EnhancedMovie) => {
+    try {
+      await movieStorage.saveMovie(movie)
+    } catch (err) {
+      console.error('Failed to save movie', err)
     }
   }
 
@@ -40,6 +55,10 @@ export function useMovieStorage() {
     }
   }
 
+  const movieExists = async (id: EnhancedMovie['id']) => {
+    return movieStorage.movieExists(id)
+  }
+
   useEffect(() => {
     getMovies()
   }, [])
@@ -47,7 +66,9 @@ export function useMovieStorage() {
   return {
     movies,
     getMovies,
+    saveMovie,
     updateMovie,
     deleteMovie,
+    movieExists,
   }
 }
