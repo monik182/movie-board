@@ -1,11 +1,10 @@
 import { Input } from 'antd'
-import { MovieList, SharePage } from '../components'
-import { useMovieStorage, useSessionIdContext } from '../hooks'
+import { MovieList } from '../components'
+import { useMovieStorage } from '../hooks'
 import { useEffect, useState } from 'react'
 import { EnhancedMovie } from '../types'
 
 export function MoviesWatchList() {
-  const { sessionId } = useSessionIdContext()
   const { movies, updateMovie, deleteMovie } = useMovieStorage()
   const [searchText, setSearchText] = useState('')
   const [filteredMovies, setFilteredMovies] = useState<EnhancedMovie[]>(movies)
@@ -32,7 +31,6 @@ export function MoviesWatchList() {
   return (
     <div>
       <h1>Movies Watch List</h1>
-      <SharePage sessionId={sessionId} />
 
       <Input.Search
         allowClear

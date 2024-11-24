@@ -6,6 +6,7 @@ import { SessionIdProvider, useSessionIdContext } from './hooks'
 import { Admin } from './Admin'
 import { LoadingOutlined } from '@ant-design/icons';
 import { Flex, Spin } from 'antd';
+import { Navbar } from './components'
 
 const AppContent: React.FC = () => {
 
@@ -22,9 +23,7 @@ const AppContent: React.FC = () => {
   return (
     <div>
       <AppContainer>
-        <nav>
-          <Link to="/">Movie Watch List</Link> | <Link to="/search">Find Movies</Link>
-        </nav>
+        <Navbar />
         <Routes>
           <Route path="/" element={<MoviesWatchList />} />
           <Route path="/:id" element={<MoviesWatchList />} />
