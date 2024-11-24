@@ -59,9 +59,21 @@ export function useMovieStorage() {
     return movieStorage.movieExists(id)
   }
 
+  const forceMovieSync = async () => {
+    await movieStorage.forceMovieSyncFromFirestore()
+    await movieStorage.forceMovieSync()
+  }
+
   useEffect(() => {
     getMovies()
   }, [sessionId])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      forceMovieSync()
+    }, 60 * 60 * 1000)
+    return () => clearInterval(interval)
+  }, [])
 
   return {
     movies,
@@ -70,5 +82,6 @@ export function useMovieStorage() {
     updateMovie,
     deleteMovie,
     movieExists,
+    forceMovieSync,
   }
 }

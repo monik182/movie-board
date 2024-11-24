@@ -1,11 +1,13 @@
-import { Input } from 'antd'
+import { Button, Input } from 'antd'
 import { MovieList } from '../components'
 import { useMovieStorage } from '../hooks'
 import { useEffect, useState } from 'react'
 import { EnhancedMovie } from '../types'
+import { SyncOutlined } from '@ant-design/icons'
+import styled from 'styled-components'
 
 export function MoviesWatchList() {
-  const { movies, updateMovie, deleteMovie } = useMovieStorage()
+  const { movies, updateMovie, deleteMovie, forceMovieSync } = useMovieStorage()
   const [searchText, setSearchText] = useState('')
   const [filteredMovies, setFilteredMovies] = useState<EnhancedMovie[]>(movies)
 
@@ -30,12 +32,15 @@ export function MoviesWatchList() {
 
   return (
     <div>
-      <h1>Movies Watch List</h1>
+      <Header>
+        <h1>Movies Watch List</h1>
+        {movies.length && <Button type="link" onClick={forceMovieSync}>Sync <SyncOutlined /></Button>}
+      </Header>
+
 
       <Input.Search
         allowClear
         type="text"
-        style={{ width: 500 }}
         onChange={(e) => handleOnChange(e.target.value)}
         placeholder="Search movie"
         maxLength={100}
@@ -45,3 +50,10 @@ export function MoviesWatchList() {
 
   )
 }
+
+const Header = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 16px;
+`

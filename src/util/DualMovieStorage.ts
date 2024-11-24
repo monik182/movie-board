@@ -1,8 +1,8 @@
 import { FirestoreMovieStorage } from './FirestoreMovieStorage'
 import { IndexedDbMovieStorage } from './IndexedDbMovieStorage'
-import { EnhancedMovie } from '../types'
+import { EnhancedMovie, MovieStorage } from '../types'
 
-export class DualMovieStorage {
+export class DualMovieStorage implements MovieStorage {
   private indexedDbStorage = new IndexedDbMovieStorage()
   private firestoreStorage: FirestoreMovieStorage
 
@@ -39,5 +39,20 @@ export class DualMovieStorage {
 
   async movieExists(movieId: EnhancedMovie['id']): Promise<boolean> {
     return this.indexedDbStorage.movieExists(movieId)
+  }
+
+  async forceMovieSync(): Promise<void> {
+    const movies = await this.indexedDbStorage.getMovies()
+    for (const movie of movies) {
+      await this.firestoreStorage.saveMovie(movie)
+    }
+  }
+
+  async forceMovieSyncFromFirestore(): Promise<void> {
+    const movies = await this.firestoreStorage.getMovies()
+    console.log('Forcing movie sync from Firestore...', movies)
+    for (const movie of movies) {
+      await this.indexedDbStorage.saveMovie(movie)
+    }
   }
 }
