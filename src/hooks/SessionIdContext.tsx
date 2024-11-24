@@ -1,14 +1,13 @@
-import React from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 
 type SessionIdContextType = {
-  sessionId: string
-  setSessionId: React.Dispatch<React.SetStateAction<string>>
+  sessionId: string | null
 }
 
-export const SessionIdContext = React.createContext<SessionIdContextType | undefined>(undefined)
+export const SessionIdContext = createContext<SessionIdContextType | undefined>(undefined)
 
 export const useSessionIdContext = () => {
-  const context = React.useContext(SessionIdContext)
+  const context = useContext(SessionIdContext)
   if (!context) {
     throw new Error('useSessionId must be used within a SessionIdProvider')
   }
@@ -16,22 +15,35 @@ export const useSessionIdContext = () => {
 }
 
 export const SessionIdProvider = ({ children }: { children: JSX.Element }) => {
-  const [sessionId, setSessionId] = React.useState<string>(() => {
-    const sessionId = localStorage.getItem('sessionId')
-    if (sessionId) {
-      return sessionId
+  const [sessionId, setSessionId] = useState<string | null>(() => {
+    if (typeof window !== 'undefined') {
+      const sessionExpiry = localStorage.getItem('sessionExpiry')
+      const now = new Date().getTime()
+
+      if (sessionExpiry && now > parseInt(sessionExpiry)) {
+        return null
+      }
+      return localStorage.getItem('sessionId')
     }
-    const array = new Uint32Array(4)
-    window.crypto.getRandomValues(array)
-    const newSessionId = array.join('-')
-    localStorage.setItem('sessionId', newSessionId)
-    return newSessionId
+    return null
   })
 
+  useEffect(() => {
+    if (!sessionId) {
+      const now = new Date().getTime()
+      const array = new Uint32Array(4)
+      window.crypto.getRandomValues(array)
+      const newSessionId = array.join('-')
+
+      localStorage.setItem('sessionId', newSessionId)
+      localStorage.setItem('sessionExpiry', (now + 30 * 24 * 60 * 60 * 1000).toString())
+      setSessionId(newSessionId)
+    }
+  }, [sessionId])
+
   return (
-    <SessionIdContext.Provider value={{ sessionId, setSessionId }}>
+    <SessionIdContext.Provider value={{ sessionId }}>
       {children}
     </SessionIdContext.Provider>
   )
 }
-
