@@ -49,7 +49,7 @@ export function MovieList({ title, movies, pagination, onAdd, onDelete, onChange
           if (item.watched) {
             props = { color: 'green', text: 'Watched 🎉' }
           } else if (item.saved) {
-            props = { color: 'cyan', text: 'Movie already in your watch list' }
+            props = { color: 'cyan', text: 'Movie added to your watch list' }
           }
 
           return (
