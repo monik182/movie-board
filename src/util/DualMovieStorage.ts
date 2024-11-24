@@ -17,6 +17,13 @@ export class DualMovieStorage {
 
   async getMovies(): Promise<EnhancedMovie[]> {
     const movies = await this.indexedDbStorage.getMovies()
+    if (!movies.length) {
+      const firestoreMovies = await this.firestoreStorage.getMovies()
+      for (const movie of firestoreMovies) {
+        await this.indexedDbStorage.saveMovie(movie)
+      }
+      return firestoreMovies
+    }
     return movies
   }
 
